@@ -5,7 +5,7 @@
 //O CÓDIGO NAO TÁ COMPLETO, CADA CASE VAI VIRAR UMA FUNÇÃO NO FINAL
 int main (){
 	setlocale(LC_CTYPE, "Portuguese_Brazil");
-	FILE *file1, *file2, *file3;
+	FILE *file1, *file2, *file3, *file4;
 	int servico, continua, conta, conta_trans, meses_investidos, parcelas, tipo_financiamento, i_sac, tempo_emprestimo;
 	float saldo, transferencia, investimento, rendimento_bruto, rendimento_liquido, P1_sac, P_sac, juros_tot_sac=0, P_total=0;
 	float ir, financiamento, juros = 0.00917, parcela_financiamento, amortizacao, emprestimo, parcela_emprestimo;
@@ -90,14 +90,23 @@ int main (){
 				printf("CONFIRA O SEU RELATÓRIO DE RENDIMENTOS!");
 				break;
 		case 3: //JUROS MENSAL REFERÊNCIA DE 1.46% a.m PELO EMPRÉSTIMO CONSIGNADO DO BANCO BANESTES S.A
+				//COMPLETO
 				printf("Quanto deseja receber de empréstimo?\nR$");
 				scanf("%f", &emprestimo);
 				printf("Em quantos meses deseja pagar o empréstimo?\n");
 				scanf("%d", &tempo_emprestimo);
+				file3 = fopen("RELATORIO DE EMPRESTIMO.txt", "w");
+				if (file3 == NULL) {
+        			printf("ERRO AO ABRIR O ARQUIVO DO RELATÓRIO DE EMPRÉSTIMO!\n");
+       				return 1;
+        			}
 				parcela_emprestimo = (emprestimo*0.0146)/(1 - pow(1.0146, tempo_emprestimo*(-1)));
-				printf("Valor do Empréstimo: R$%.2f", emprestimo);
-				printf("Período de pagamento do empréstimo: %d meses", tempo_emprestimo);
-				printf("Parcelas do empréstimo: R$%f", parcela_emprestimo);
+				fprintf(file3, "VALOR DO EMPRÉSTIMO: R$%.2f\n", emprestimo);
+				fprintf(file3, "PERÍODO DE PAGAMENTO: %d meses\n", tempo_emprestimo);
+				fprintf(file3, "PARCELAS DO EMPRÉSTIMO: R$%.2f\n", parcela_emprestimo);
+				fprintf(file3, "Juros totais do empréstimo: R$%.2f\n", parcela_emprestimo*tempo_emprestimo - emprestimo);
+				fclose(file3);
+				printf("CONFIRA O SEU RELATÓRIO DE EMPRÉSTIMO!");
 				break;
 		case 4:	//JUROS MENSAL REFERÊNCIA DE 0.917% a.m. DA MODALIDADE SBPE TAXA FIXA DA CAIXA ECONÔMICA FEDERAL
 				//PRICE COMPLETO
@@ -112,37 +121,37 @@ int main (){
 				printf("O pagamento será realizado em quantas parcelas?\n");
 				scanf("%d", &parcelas);
 				if (tipo_financiamento == 1){
-					file3 = fopen("RELATORIO DE FINANCIAMENTO PRICE.txt", "w");
-					if (file3 == NULL) {
+					file4 = fopen("RELATORIO DE FINANCIAMENTO PRICE.txt", "w");
+					if (file4 == NULL) {
         				printf("ERRO AO ABRIR O ARQUIVO DO RELATÓRIO DE FINANCIAMENTO!\n");
        				return 1;
         			}
 					parcela_financiamento = financiamento*juros*(pow(1 + juros, parcelas))/((pow(1 + juros, parcelas)) - 1);
-					fprintf(file3, "MODO DE FINANCIAMENTO: SISTEMA PRICE\n");
-					fprintf(file3, "Valor das Parcelas: R$%.2f\n", parcela_financiamento);
-					fprintf(file3, "JUROS TOTAIS: R$%.2f\n", (parcela_financiamento*parcelas) - financiamento);
-					fprintf(file3, "VALOR TOTAL A SER PAGO: %.2f\n", parcela_financiamento*parcelas);
-					fclose(file3);
+					fprintf(file4, "MODO DE FINANCIAMENTO: SISTEMA PRICE\n");
+					fprintf(file4, "Valor das Parcelas: R$%.2f\n", parcela_financiamento);
+					fprintf(file4, "JUROS TOTAIS: R$%.2f\n", (parcela_financiamento*parcelas) - financiamento);
+					fprintf(file4, "VALOR TOTAL A SER PAGO: %.2f\n", parcela_financiamento*parcelas);
+					fclose(file4);
 				} else {
-					file3 = fopen("RELATORIO DE FINANCIAMENTO SAC.txt", "w");
+					file4 = fopen("RELATORIO DE FINANCIAMENTO SAC.txt", "w");
 					amortizacao = financiamento/parcelas;
 					P1_sac = amortizacao + (financiamento*juros);
 				}
 					for (i_sac=1; i_sac <= parcelas; i_sac++){
 						if (i_sac == 1){
-							fprintf(file3, "MODO DE FINANCIAMENTO: SISTEMA SAC\n\n");
-							fprintf(file3, "Parcela %d: R$%.2f\n", i_sac, P1_sac);
+							fprintf(file4, "MODO DE FINANCIAMENTO: SISTEMA SAC\n\n");
+							fprintf(file4, "Parcela %d: R$%.2f\n", i_sac, P1_sac);
 							P_total += P1_sac;
 						} else {
 								P_sac = amortizacao + (financiamento - (i_sac - 1)*amortizacao)*juros;
-								fprintf(file3, "Parcela %d: R$%.2f\n", i_sac, P_sac);
+								fprintf(file4, "Parcela %d: R$%.2f\n", i_sac, P_sac);
 								P_total += P_sac;
 						}
 					}
 						juros_tot_sac = P_total - financiamento;
-						fprintf(file3, "\n\nJUROS TOTAIS: R$%.2f\n", juros_tot_sac);
-						fprintf(file3, "VALOR TOTAL A SER PAGO: %.2f\n", juros_tot_sac + financiamento);
-						fclose(file3);
+						fprintf(file4, "\n\nJUROS TOTAIS: R$%.2f\n", juros_tot_sac);
+						fprintf(file4, "VALOR TOTAL A SER PAGO: %.2f\n", juros_tot_sac + financiamento);
+						fclose(file4);
 				printf("CONFIRA SEU RELATÓRIO DE FINANCIAMENTO!");
 				break;
 		case 5:
