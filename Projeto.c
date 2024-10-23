@@ -6,9 +6,9 @@
 int main (){
 	setlocale(LC_CTYPE, "Portuguese_Brazil");
 	FILE *file1, *file2, *file3;
-	int servico, continua, conta, conta_trans, meses_investidos, parcelas, tipo_financiamento, i_sac;
+	int servico, continua, conta, conta_trans, meses_investidos, parcelas, tipo_financiamento, i_sac, tempo_emprestimo;
 	float saldo, transferencia, investimento, rendimento_bruto, rendimento_liquido, P1_sac, P_sac, juros_tot_sac=0, P_total=0;
-	float ir, financiamento, juros = 0.0146, parcela_financiamento, amortizacao;
+	float ir, financiamento, juros = 0.00917, parcela_financiamento, amortizacao, emprestimo, parcela_emprestimo;
 	char nome[50], beneficiario[50];
 	printf("SEJA BEM-VINDO AO BANCO ZUBANK!\n\n");
 	printf("Qual o seu nome?\n");
@@ -19,13 +19,11 @@ int main (){
 	scanf("%d", &conta);
 	printf("Qual o número do serviço que deseja utilizar?\n");
 	do{
-		printf("1 - Visualizar saldo\n2 - Realizar transferência\n3 - Rendimento da conta");
+		printf("1 - Realizar transferência\n2 - Rendimento da conta\n3 - Realizar empréstimo");
 		printf("\n4 - Realizar financiamento\n5 - Extrato\n");
 		scanf("%d", &servico);
 		switch (servico){
-			case 1: printf("Saldo disponível: R$%.2f", saldo);
-				break;
-			case 2:
+			case 1:
 				//COMPLETO
 				do{
 				printf("Quanto deseja transferir?\nR$");
@@ -54,8 +52,9 @@ int main (){
 				printf("SALDO ATUAL: %.2f\n", saldo-transferencia);
 				printf("TRANSFERÊNCIA REALIZADA COM SUCESSO, CONSULTE SEU RECIBO!\n");
 				break;
-			case 3: 
-				//COMPLETO
+			case 2: 
+					//TAXA DO CDB DE REFERÊNCIA É DE 11.45% a.a COM 102% DO CDI PELO BANCO INTER EM OUTUBRO/24
+					//COMPLETO
 				do{
 				printf("Quanto do saldo disponível (R$%.2f) deseja investir?\n", saldo);
 				scanf("%f", &investimento);
@@ -73,8 +72,8 @@ int main (){
 							} else {
 								ir = 0.15;
 								}
-				rendimento_bruto = investimento*(pow(1.00892704, meses_investidos));
-				rendimento_liquido = (rendimento_bruto - ((investimento*pow(1.00892704, meses_investidos) - investimento)*ir));
+				rendimento_bruto = investimento*(pow(1.009542, meses_investidos));
+				rendimento_liquido = (rendimento_bruto - ((investimento*pow(1.009542, meses_investidos) - investimento)*ir));
 				saldo += rendimento_liquido;
 				file2 = fopen("RELATORIO DE RENDIMENTOS.txt", "w");
 				if (file2 == NULL) {
@@ -90,8 +89,19 @@ int main (){
 				fclose(file2);
 				printf("CONFIRA O SEU RELATÓRIO DE RENDIMENTOS!");
 				break;
-		case 4:	//JUROS MENSAL DE 1.46% a.m. E 18.98 a.a. DE REFERÊNCIA É DO BANCO BANESTES S.A.
+		case 3: //JUROS MENSAL REFERÊNCIA DE 1.46% a.m PELO EMPRÉSTIMO CONSIGNADO DO BANCO BANESTES S.A
+				printf("Quanto deseja receber de empréstimo?\nR$");
+				scanf("%f", &emprestimo);
+				printf("Em quantos meses deseja pagar o empréstimo?\n");
+				scanf("%d", &tempo_emprestimo);
+				parcela_emprestimo = (emprestimo*0.0146)/(1 - pow(1.0146, tempo_emprestimo*(-1)));
+				printf("Valor do Empréstimo: R$%.2f", emprestimo);
+				printf("Período de pagamento do empréstimo: %d meses", tempo_emprestimo);
+				printf("Parcelas do empréstimo: R$%f", parcela_emprestimo);
+				break;
+		case 4:	//JUROS MENSAL REFERÊNCIA DE 0.917% a.m. DA MODALIDADE SBPE TAXA FIXA DA CAIXA ECONÔMICA FEDERAL
 				//PRICE COMPLETO
+				//SAC COMPLETO
 				printf("Qual modelo de financiamento será utilizado?\n");
 				do{
 					printf("1 - PRICE: Parcelas fixas\n2 - SAC: Parcelas decrescentes\n");
@@ -114,31 +124,28 @@ int main (){
 					fprintf(file3, "VALOR TOTAL A SER PAGO: %.2f\n", parcela_financiamento*parcelas);
 					fclose(file3);
 				} else {
-					file3 = fopen("RELATORIO DE FINANCIAMENTO.txt", "w");
+					file3 = fopen("RELATORIO DE FINANCIAMENTO SAC.txt", "w");
 					amortizacao = financiamento/parcelas;
 					P1_sac = amortizacao + (financiamento*juros);
 				}
 					for (i_sac=1; i_sac <= parcelas; i_sac++){
 						if (i_sac == 1){
-							fprintf(file3, "MODO DE FINANCIAMENTO: SISTEMA SAC\n");
+							fprintf(file3, "MODO DE FINANCIAMENTO: SISTEMA SAC\n\n");
 							fprintf(file3, "Parcela %d: R$%.2f\n", i_sac, P1_sac);
+							P_total += P1_sac;
 						} else {
-							for(i_sac == 3; i_sac <= parcelas; i_sac++){
 								P_sac = amortizacao + (financiamento - (i_sac - 1)*amortizacao)*juros;
-								//printf("\nP_sac: %.2f\nP1_sac: %.2f\ni_sac: %d\n", P_sac, P1_sac, i_sac);
-							//	P_sac = amortizacao/(1 - pow(1 + juros, parcelas));
 								fprintf(file3, "Parcela %d: R$%.2f\n", i_sac, P_sac);
 								P_total += P_sac;
-								}
-								juros_tot_sac = P_sac - financiamento;
-							//P1_sac += P_sac;
-							fprintf(file3, "JUROS TOTAIS: R$%.2f\n", juros_tot_sac);
-							fprintf(file3, "VALOR TOTAL A SER PAGO: %.2f\n", juros_tot_sac + financiamento);
-							fclose(file3);
-							break;
 						}
 					}
-		case 5: 
+						juros_tot_sac = P_total - financiamento;
+						fprintf(file3, "\n\nJUROS TOTAIS: R$%.2f\n", juros_tot_sac);
+						fprintf(file3, "VALOR TOTAL A SER PAGO: %.2f\n", juros_tot_sac + financiamento);
+						fclose(file3);
+				printf("CONFIRA SEU RELATÓRIO DE FINANCIAMENTO!");
+				break;
+		case 5:
 			break;
 		default: printf("OPERAÇÃO INVÁLIDA!");
 	}
