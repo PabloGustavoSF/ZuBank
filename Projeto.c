@@ -2,19 +2,18 @@
 #include <string.h>
 #include <math.h>
 #include <locale.h>
-//O CÓDIGO NAO TÁ COMPLETO, CADA CASE VAI VIRAR UMA FUNÇÃO NO FINAL
 int main (){
 	setlocale(LC_CTYPE, "Portuguese_Brazil");
-	FILE *file1, *file2, *file3, *file4;
+	FILE *file1, *file2, *file3, *file4, *file5;
 	int servico, continua, conta, conta_trans, meses_investidos, parcelas, tipo_financiamento, i_sac, tempo_emprestimo;
-	float saldo, transferencia, investimento, rendimento_bruto, rendimento_liquido, P1_sac, P_sac, juros_tot_sac=0, P_total=0;
-	float ir, financiamento, juros = 0.00917, parcela_financiamento, amortizacao, emprestimo, parcela_emprestimo;
+	float saldo_inicial, transferencia, investimento, rendimento_bruto, rendimento_liquido, P1_sac, P_sac, juros_tot_sac=0, P_total=0, entrada, saida;
+	float ir, financiamento, juros = 0.00917, parcela_financiamento, amortizacao, emprestimo, parcela_emprestimo, saldo_final, val_financ;
 	char nome[50], beneficiario[50];
 	printf("SEJA BEM-VINDO AO BANCO ZUBANK!\n\n");
 	printf("Qual o seu nome?\n");
 	gets(nome);
 	printf("Qual o seu saldo bancário?\n");
-	scanf("%f", &saldo);
+	scanf("%f", &saldo_inicial);
 	printf("Qual o número da sua conta bancária?\n");
 	scanf("%d", &conta);
 	printf("Qual o número do serviço que deseja utilizar?\n");
@@ -24,14 +23,13 @@ int main (){
 		scanf("%d", &servico);
 		switch (servico){
 			case 1:
-				//COMPLETO
 				do{
 				printf("Quanto deseja transferir?\nR$");
 				scanf("%f", &transferencia);
-				if (transferencia > saldo){
+				if (transferencia > saldo_inicial){
 					printf("SALDO INSUFICIENTE!\n");
 				}
-				} while (transferencia > saldo);
+				} while (transferencia > saldo_inicial);
 				printf("Qual o nome do beneficiário?\n");
 				fflush(stdin);
 				gets(beneficiario);
@@ -49,16 +47,16 @@ int main (){
 				fprintf(file1, "CONTA RECEPTORA: %d\n", conta_trans);
 				fprintf(file1, "VALOR RECEBIDO: R$%.2f\n", transferencia);
 				fclose(file1);
-				printf("SALDO ATUAL: %.2f\n", saldo-transferencia);
+				printf("SALDO ATUAL: %.2f\n", saldo_inicial - transferencia);
+				saldo_final = saldo_inicial - transferencia;
 				printf("TRANSFERÊNCIA REALIZADA COM SUCESSO, CONSULTE SEU RECIBO!\n");
 				break;
 			case 2: 
 					//TAXA DO CDB DE REFERÊNCIA É DE 11.45% a.a COM 102% DO CDI PELO BANCO INTER EM OUTUBRO/24
-					//COMPLETO
 				do{
-				printf("Quanto do saldo disponível (R$%.2f) deseja investir?\n", saldo);
+				printf("Quanto do saldo disponível (R$%.2f) deseja investir?\n", saldo_final);
 				scanf("%f", &investimento);
-				} while (investimento > saldo);
+				} while (investimento > saldo_final);
 				do{
 				printf("Por quantos meses deseja deixar o valor investido?\n");
 				scanf("%d", &meses_investidos);
@@ -74,7 +72,7 @@ int main (){
 								}
 				rendimento_bruto = investimento*(pow(1.009542, meses_investidos));
 				rendimento_liquido = (rendimento_bruto - ((investimento*pow(1.009542, meses_investidos) - investimento)*ir));
-				saldo += rendimento_liquido;
+				saldo_final += rendimento_liquido - investimento;
 				file2 = fopen("RELATORIO DE RENDIMENTOS.txt", "w");
 				if (file2 == NULL) {
         			printf("ERRO AO ABRIR O ARQUIVO DO RELATÓRIO DE RENDIMENTOS!\n");
@@ -84,17 +82,17 @@ int main (){
 				fprintf(file2, "VALOR INVESTIDO: R$%.2f\n", investimento);
 				fprintf(file2, "MESES CORRIDOS: %d meses\n", meses_investidos);
 				fprintf(file2, "ALÍQUOTA DO IMPOSTO DE RENDA: %.2f%%\n", ir*100);
-				fprintf(file2, "RENDIMENTO BRUTO: R$%.2f\n", rendimento_bruto);
-				fprintf(file2, "RENDIMENTO LÍQUIDO: R$%.2f\n", rendimento_liquido);
+				fprintf(file2, "RENDIMENTO BRUTO: R$%.2f\n", rendimento_bruto - investimento);
+				fprintf(file2, "RENDIMENTO LÍQUIDO: R$%.2f\n", rendimento_liquido - investimento);
 				fclose(file2);
 				printf("CONFIRA O SEU RELATÓRIO DE RENDIMENTOS!");
 				break;
 		case 3: //JUROS MENSAL REFERÊNCIA DE 1.46% a.m PELO EMPRÉSTIMO CONSIGNADO DO BANCO BANESTES S.A
-				//COMPLETO
 				printf("Quanto deseja receber de empréstimo?\nR$");
 				scanf("%f", &emprestimo);
 				printf("Em quantos meses deseja pagar o empréstimo?\n");
 				scanf("%d", &tempo_emprestimo);
+				saldo_final += emprestimo;
 				file3 = fopen("RELATORIO DE EMPRESTIMO.txt", "w");
 				if (file3 == NULL) {
         			printf("ERRO AO ABRIR O ARQUIVO DO RELATÓRIO DE EMPRÉSTIMO!\n");
@@ -109,8 +107,6 @@ int main (){
 				printf("CONFIRA O SEU RELATÓRIO DE EMPRÉSTIMO!");
 				break;
 		case 4:	//JUROS MENSAL REFERÊNCIA DE 0.917% a.m. DA MODALIDADE SBPE TAXA FIXA DA CAIXA ECONÔMICA FEDERAL
-				//PRICE COMPLETO
-				//SAC COMPLETO
 				printf("Qual modelo de financiamento será utilizado?\n");
 				do{
 					printf("1 - PRICE: Parcelas fixas\n2 - SAC: Parcelas decrescentes\n");
@@ -154,7 +150,27 @@ int main (){
 						fclose(file4);
 				printf("CONFIRA SEU RELATÓRIO DE FINANCIAMENTO!");
 				break;
-		case 5:
+		case 5: 	
+					val_financ = (tipo_financiamento == 1)?parcela_financiamento:P1_sac;
+					saida = transferencia + parcela_emprestimo + val_financ;
+					file5 = fopen("EXTRATO BANCÁRIO.txt", "w");
+					if (file5 == NULL) {
+        				printf("ERRO AO ABRIR O ARQUIVO DO EXTRATO BANCÁRIO!\n");
+       				return 1;
+        			}
+					fprintf(file5, "EXTRATO BANCÁRIO\n\n\n");
+					fprintf(file5, "RELATÓRIO DE ENTRADA\n\n");
+					fprintf(file5, "SALDO INICIAL: R$%.2f\n", saldo_inicial);
+					fprintf(file5, "TRANSFERÊNCIAS RECEBIDAS: %.2f\n", conta_trans);
+					fprintf(file5, "RENDIMENTO LÍQUIDO DO CDB: %.2f\n", rendimento_liquido - investimento);
+					fprintf(file5, "EMPRÉSTIMO RECEBIDO: %.2f\n\n\n", emprestimo);
+					fprintf(file5, "RELATÓRIO DE SAÍDA\n\n");
+					fprintf(file5, "TRANSFERÊNCIAS REALIZADAS: %.2f\n", transferencia);
+					fprintf(file5, "PARCELA DO EMPRÉSTIMO: %.2f\n", parcela_emprestimo);
+					fprintf(file5, "PARCELA DO FINANCIAMENTO: %.2f\n", (tipo_financiamento==1)?parcela_financiamento:P1_sac);
+					fprintf(file5, "SALDO FINAL: %.2lf\n", saldo_final - saida);
+					fclose(file5);
+					printf("CONFIRA SEU EXTRATO BANCÁRIO!");
 			break;
 		default: printf("OPERAÇÃO INVÁLIDA!");
 	}
