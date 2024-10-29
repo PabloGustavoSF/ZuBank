@@ -1,0 +1,5 @@
+Ainda nao foram implementadas as funcoes, 
+mandei para darem uma olhada e saber se tem algum erro nas funcoes
+
+O codigo esta com as structs, mas nao implementei
+nas variaveis ainda
