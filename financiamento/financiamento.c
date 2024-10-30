@@ -1,37 +1,8 @@
-// financiamento.h
+// financiamento.c
 
-#ifndef FINANCIAMENTO_H
-#define FINANCIAMENTO_H
+#include "financiamento.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
-
-#define Jm 0.00917  // Juros mensal padrão para financiamento
-#define Ja 0.1898   // Juros anual padrão para financiamento
-
-// Estrutura para armazenar dados de um financiamento
-struct Financiamento
-{
-    float juros;        // Taxa de Juros
-    float valor;        // Valor financiado
-    int parcelas;       // Número de parcelas
-    float vP;           // Valor da parcela
-    float amortizacao;  // Amortização da dívida
-};
-
-// Funções CRUD para a estrutura Financiamento
-void createFinanciamento(struct Financiamento *f, float valor, int parcelas, float juros);
-void readFinanciamento(struct Financiamento *f);
-void updateFinanciamento(struct Financiamento *f, float valor, int parcelas, float juros);
-void deleteFinanciamento(struct Financiamento *f);
-
-// Funções para cálculos de financiamento usando sistema Price e SAC
-void Price(struct Financiamento *f);
-void Sac(struct Financiamento *f);
-
-// Implementação das funções CRUD
+// Função para criar um financiamento com valores iniciais
 void createFinanciamento(struct Financiamento *f, float valor, int parcelas, float juros)
 {
     f->valor = valor;
@@ -46,7 +17,7 @@ void readFinanciamento(struct Financiamento *f)
 {
     if (f->valor == 0 && f->parcelas == 0)
     {
-        printf("No financiamento data available.\n");
+        printf("Nenhum dado de financiamento disponível.\n");
         return;
     }
 
@@ -85,7 +56,7 @@ void Price(struct Financiamento *f)
     float parcelaFinanciamento;
 
     // Abrir arquivo para salvar o relatório do financiamento Price
-    doc = fopen("Relatorio de financiamento Price.txt", "w");
+    doc = fopen("Relatorio_de_financiamento_Price.txt", "w");
     if (doc == NULL)
     {
         printf("Erro ao abrir o arquivo do relatório de financiamento\n");
@@ -115,7 +86,7 @@ void Sac(struct Financiamento *f)
     struct tm *horaLocal;
 
     // Abrir arquivo para salvar o relatório do financiamento SAC
-    doc = fopen("Relatorio de financiamento SAC.txt", "w");
+    doc = fopen("Relatorio_de_financiamento_SAC.txt", "w");
     if (doc == NULL)
     {
         printf("Erro ao abrir o arquivo do relatório de financiamento\n");
@@ -152,5 +123,3 @@ void Sac(struct Financiamento *f)
     fclose(doc);
     printf("CONFIRA SEU RELATÓRIO DE FINANCIAMENTO!\n");
 }
-
-#endif // FINANCIAMENTO_H

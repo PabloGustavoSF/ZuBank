@@ -1,0 +1,31 @@
+Modo de financiamento: SAC 
+
+Parcela 1: R$2541.83
+Parcela 2: R$2522.73
+Parcela 3: R$2503.63
+Parcela 4: R$2484.52
+Parcela 5: R$2465.42
+Parcela 6: R$2446.31
+Parcela 7: R$2427.21
+Parcela 8: R$2408.10
+Parcela 9: R$2389.00
+Parcela 10: R$2369.90
+Parcela 11: R$2350.79
+Parcela 12: R$2331.69
+Parcela 13: R$2312.58
+Parcela 14: R$2293.48
+Parcela 15: R$2274.38
+Parcela 16: R$2255.27
+Parcela 17: R$2236.17
+Parcela 18: R$2217.06
+Parcela 19: R$2197.96
+Parcela 20: R$2178.85
+Parcela 21: R$2159.75
+Parcela 22: R$2140.65
+Parcela 23: R$2121.54
+Parcela 24: R$2102.44
+
+
+JUROS TOTAIS: R$5731.25
+VALOR TOTAL A SER PAGO: 55731.25
+Hora local: 15:03:02
