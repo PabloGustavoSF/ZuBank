@@ -1,0 +1,17 @@
+Modo de financiamento: SAC 
+
+Parcela 1: R$1091.70
+Parcela 2: R$1082.53
+Parcela 3: R$1073.36
+Parcela 4: R$1064.19
+Parcela 5: R$1055.02
+Parcela 6: R$1045.85
+Parcela 7: R$1036.68
+Parcela 8: R$1027.51
+Parcela 9: R$1018.34
+Parcela 10: R$1009.17
+
+
+JUROS TOTAIS: R$504.35
+VALOR TOTAL A SER PAGO: 10504.35
+Hora local: 15:29:08
