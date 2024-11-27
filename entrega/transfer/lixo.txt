@@ -1,0 +1,97 @@
+
+void menuTransferencia(Transferencia **vetorTransf, Cliente *cliente)
+{
+    int op, validator, valor, id, count = 0, id_Transf;
+    char remetente[50];
+
+    printf("| MENU Transferência |\n");
+
+    do
+    {
+        printf("| 1 | Para Criar     |\n");
+        printf("| 2 | Para Exibir    |\n");
+        printf("| 3 | Para Deletar   |\n");
+        printf("| 4 | Para Realizar  |\n");
+        printf("| 5 | Para Sair      |\n");
+        scanf("%d", &op);
+        switch (op)
+        {
+        case 1:
+
+            if (count < 5)
+            {
+                do
+                {
+                    printf("Quanto deseja transferir?\nR$");
+                    scanf("%f", valor);
+                    if (valor > cliente->saldo_inicial)
+                    {
+                        printf("SALDO INSUFICIENTE!\n");
+                    }
+                } while (valor > cliente->saldo_inicial);
+
+                printf("Qual o nome do beneficiário?\n");
+                fgets(remetente, sizeof(remetente), stdin);
+                printf("Qual o número da conta para qual deseja transferir o valor?\n");
+                scanf("%d", &id);
+
+                vetorTransf[count] = criarTransferencia(remetente, id, valor);
+
+                count++;
+            }else
+            {
+                printf("Limite de Transferencias atingido!");
+            }
+            
+            break;
+        case 2:
+                exibirTransferencia(&vetorTransf, count);
+            break;
+        case 3:
+            
+            printf("Informe a transferencia que deseja deletar");
+            scanf("%d", &id_Transf);
+            deletarTransferencia(vetorTransf[id_Transf]);
+
+            break;
+        case 4:
+            /* code */
+            break;
+        case 5:
+            /* code */
+            break;
+
+        default:
+            printf("Opcao ivalida tente novamente");
+            break;
+        }
+    } while (op != 5);
+}
+
+Transferencia *criarTransferencia(const char *beneficiario, int conta_trans, float valor)
+{
+    Transferencia *transf = (Transferencia *)malloc(sizeof(Transferencia));
+    if (transf == NULL)
+    {
+        printf("Erro ao alocar mem�ria para a transfer�ncia.\n");
+        return NULL;
+    }
+    strncpy(transf->beneficiario, beneficiario, sizeof(transf->beneficiario));
+    transf->conta_trans = conta_trans;
+    transf->valor_transferencia = valor;
+
+    return transf;
+}
+
+void exibirTransferencia(const Transferencia **vetorTransf, int count)
+{
+    for (size_t i = 0; i < count; i++)
+    {
+    if (vetorTransf[i] == NULL)
+        return;
+    printf("Benefici�rio: %s\nConta de Destino: %d\nValor Transferido: R$%.2f\n",
+           vetorTransf[i]->beneficiario, vetorTransf[i]->conta_trans, vetorTransf[i]->valor_transferencia);
+        
+    }
+    
+}
