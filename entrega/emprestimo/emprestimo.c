@@ -1,6 +1,6 @@
 #include "emprestimo.h"
 
-void criarEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_emprestimos, float saldo_disponivel) {
+void criarEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_emprestimos, float *saldo_disponivel) {
     if (*count >= max_emprestimos) {
         printf("Limite de empréstimos atingido!\n");
         return;
@@ -16,11 +16,12 @@ void criarEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_empresti
     novo->id = (*count == 0) ? 1 : vetorEmprestimos[*count - 1]->id + 1;
 
     // Solicita informações do usuário
-    printf("Quanto deseja receber de empréstimo (saldo disponível: R$%.2f)?\nR$", saldo_disponivel);
+    printf("Quanto deseja receber de empréstimo? (Saldo disponível: R$%.2f)\nR$", *saldo_disponivel);
     scanf("%f", &novo->valor_emprestimo);
 
-    if (novo->valor_emprestimo > saldo_disponivel) {
-        printf("Saldo insuficiente para o empréstimo solicitado.\n");
+    // Verifica se o valor solicitado excede o saldo disponível
+    if (novo->valor_emprestimo <= 0) {
+        printf("Valor inválido! Empréstimo deve ser maior que zero.\n");
         free(novo);
         return;
     }
@@ -29,7 +30,7 @@ void criarEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_empresti
     scanf("%d", &novo->tempo_emprestimo);
 
     // Calcula parcelas e juros
-    float taxa_juros = 0.0146; // Taxa de juros fixa de 1.46% ao mês
+    float taxa_juros = 0.0146;  // Taxa de juros fixa de 1.46% ao mês
     novo->valor_parcela = (novo->valor_emprestimo * taxa_juros) / (1 - pow(1 + taxa_juros, -novo->tempo_emprestimo));
     novo->juros_totais = (novo->valor_parcela * novo->tempo_emprestimo) - novo->valor_emprestimo;
 
@@ -37,7 +38,11 @@ void criarEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_empresti
     vetorEmprestimos[*count] = novo;
     (*count)++;
 
+    // Atualiza o saldo disponível
+    *saldo_disponivel += novo->valor_emprestimo;
+
     printf("Empréstimo criado com sucesso! ID: %d\n", novo->id);
+    printf("Novo saldo disponível: R$%.2f\n", *saldo_disponivel);
 }
 
 void exibirEmprestimos(Emprestimo **vetorEmprestimos, int count) {
@@ -206,7 +211,7 @@ void menuEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_emprestim
 
         switch (opcao) {
             case 1:
-                criarEmprestimo(vetorEmprestimos, count, max_emprestimos, *saldo_disponivel);
+                criarEmprestimo(vetorEmprestimos, count, max_emprestimos, saldo_disponivel);
                 break;
             case 2:
                 exibirEmprestimos(vetorEmprestimos, *count);
@@ -218,6 +223,7 @@ void menuEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_emprestim
                 excluirEmprestimo(vetorEmprestimos, count);
                 break;
             case 5:
+                salvarEmprestimos(vetorEmprestimos, *count);  // Salva os empréstimos ao sair
                 printf("Saindo do menu de empréstimos.\n");
                 break;
             default:
