@@ -1,44 +1,5 @@
 #include "transfer.h"
 
-// Fun��es para CRUD de Cliente
-Cliente *criarCliente(const char *nome, int conta, float saldo_inicial)
-{
-    Cliente *cliente = (Cliente *)malloc(sizeof(Cliente));
-    if (cliente == NULL)
-    {
-        printf("Erro ao alocar mem�ria para o cliente.\n");
-        return NULL;
-    }
-    strncpy(cliente->nome, nome, sizeof(cliente->nome));
-    cliente->conta = conta;
-    cliente->saldo_inicial = saldo_inicial;
-    cliente->saldo_final = saldo_inicial;
-    return cliente;
-}
-
-void exibirCliente(const Cliente *cliente)
-{
-    if (cliente == NULL)
-        return;
-    printf("Cliente: %s\nConta: %d\nSaldo Inicial: R$%.2f\nSaldo Final: R$%.2f\n",
-           cliente->nome, cliente->conta, cliente->saldo_inicial, cliente->saldo_final);
-}
-
-void atualizarSaldo(Cliente *cliente, float novoSaldo)
-{
-    if (cliente == NULL)
-        return;
-    cliente->saldo_final = novoSaldo;
-}
-
-void deletarCliente(Cliente *cliente)
-{
-    if (cliente != NULL)
-    {
-        free(cliente);
-        printf("Cliente exclu�do com sucesso.\n");
-    }
-}
 
 // Fun��es para CRUD de Transferencia
 Transferencia *criarTransferencia(const char *beneficiario, int conta_trans, float valor)
