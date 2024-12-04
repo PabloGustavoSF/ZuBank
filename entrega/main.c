@@ -15,6 +15,16 @@
 #define nEMPREST 5       // Número máximo de empréstimos
 #define nFINANCIAMENTO 5 // Número máximo de financiamentos
 
+void exibirTitulo(const char *titulo) {
+    printf("\n=========================================\n");
+    printf("   %s\n", titulo);
+    printf("=========================================\n");
+}
+
+void exibirLinha() {
+    printf("-----------------------------------------\n");
+}
+
 int main(int argc, char const *argv[])
 {
     setlocale(LC_CTYPE, "Portuguese_Brazil");
@@ -22,7 +32,7 @@ int main(int argc, char const *argv[])
     Conta user;
     int continua, servico;
 
-    printf("SEJA BEM-VINDO AO BANCO ZUBANK!\n\n");
+    exibirTitulo("BEM-VINDO AO BANCO ZUBANK");
 
     criarConta(&user);
     Cliente *novoCliente = criarCliente(user.nome, user.conta_id, user.saldo_Inicial);
@@ -34,7 +44,7 @@ int main(int argc, char const *argv[])
         printf("Erro ao alocar memoria para transferencias.\n");
         return 1;
     }
-    int countTransferencias = 0; // Contador de transferências criadas
+    int countTransferencias = 0;
 
     // Alocação e inicialização para investimentos
     Investimento **investimentos = (Investimento **)calloc(nINVEST, sizeof(Investimento *));
@@ -69,49 +79,61 @@ int main(int argc, char const *argv[])
     }
     int countFinanciamentos = 0;
 
+    exibirLinha();
+    printf("Dados da Conta:\n");
     printf("Nome: %s\n", user.nome);
     printf("ID da Conta: %d\n", user.conta_id);
-    printf("Saldo Inicial: %.2f\n", user.saldo_Inicial);
-
-    printf("Qual o serviço que deseja utilizar?\n");
+    printf("Saldo Inicial: R$%.2f\n", user.saldo_Inicial);
+    exibirLinha();
 
     do
     {
-        printf("\n1 - Realizar transferencia");
-        printf("\n2 - Gerenciar investimentos");
-        printf("\n3 - Realizar emprestimo");
-        printf("\n4 - Realizar financiamento");
-        printf("\n5 - Extrato");
+        exibirTitulo("MENU PRINCIPAL");
+        printf("1 - Realizar Transferencia\n");
+        printf("2 - Gerenciar Investimentos\n");
+        printf("3 - Realizar Emprestimo\n");
+        printf("4 - Realizar Financiamento\n");
+        printf("5 - Gerar Extrato\n");
+        printf("6 - Sair\n");
         printf("Escolha: ");
         scanf("%d", &servico);
 
         switch (servico)
         {
         case 1:
+            exibirTitulo("TRANSFERENCIAS");
             menuTransferencia(transfers, novoCliente, nTRANSFER, &countTransferencias);
             break;
         case 2:
+            exibirTitulo("INVESTIMENTOS");
             menuInvestimento(investimentos, &countInvestimentos, nINVEST, &novoCliente->saldo_final);
             break;
         case 3:
+            exibirTitulo("EMPRESTIMOS");
             menuEmprestimo(emprestimos, &countEmprestimos, nEMPREST, &novoCliente->saldo_final);
             break;
         case 4:
+            exibirTitulo("FINANCIAMENTOS");
             menuFinanciamento(financiamentos, &countFinanciamentos, nFINANCIAMENTO);
             break;
         case 5:
+            exibirTitulo("EXTRATO");
             gerarExtratoBancario(novoCliente, transfers, countTransferencias, investimentos, countInvestimentos, emprestimos, countEmprestimos, financiamentos, countFinanciamentos);
             break;
+        case 6:
+            exibirTitulo("ENCERRANDO O PROGRAMA");
+            printf("Obrigado por utilizar o Banco ZUBANK. Ate logo!\n");
+            break;
         default:
-            printf("Opção invalida! Tente novamente.\n");
+            printf("Opcao invalida! Tente novamente.\n");
             break;
         }
 
-        if (servico != 5)
+        if (servico != 6)
         {
             do
             {
-                printf("\nDeseja continuar? Digite 0 para encerrar e 1 para continuar!\n");
+                printf("\nDeseja realizar outra operacao? (1 - Sim / 0 - Nao): ");
                 scanf("%d", &continua);
             } while (continua != 0 && continua != 1);
         }
