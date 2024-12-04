@@ -10,21 +10,28 @@
 
 // Estrutura do Extrato
 typedef struct {
-    float saldo_inicial;
-    float saldo_final;
-    float transferencias;
-    float rendimento_liquido;
-    float emprestimo;
-    float parcelas_emprestimo;
-    float parcelas_financiamento;
+    float saldo_inicial;         // Saldo inicial da conta
+    float saldo_final;           // Saldo final da conta
+    float transferencias;        // Total das transferências realizadas
+    float rendimento_liquido;    // Rendimento líquido dos investimentos
+    float emprestimo;            // Valor total dos empréstimos recebidos
+    float parcelas_emprestimo;   // Total das parcelas de empréstimos pagas
+    float parcelas_financiamento;// Total das parcelas de financiamentos pagas
 } Extrato;
 
 // Funções para gerenciar o extrato
+
+// Cria o arquivo do extrato com informações iniciais do cliente
 void criarExtrato(FILE **file, Cliente *cliente);
-void lerRelatorioEntrada(FILE *file, Extrato *extrato, Transferencia *transfers, int nTransfers, Investimento **investimentos, int nInvestimentos, Emprestimo **emprestimos, int nEmprestimos);
-void lerRelatorioSaida(FILE *file, Extrato *extrato, Transferencia *transfers, int nTransfers, Emprestimo **emprestimos, int nEmprestimos, Financiamento **financiamentos, int nFinanciamentos);
-void calcularESalvarSaldoFinal(FILE *file, Extrato *extrato);
+
+// Gera o extrato completo com transferências, investimentos, empréstimos e financiamentos
+void gerarExtratoBancario(Cliente *cliente, Transferencia **transfers, int nTransfers,
+                          Investimento **investimentos, int countInvestimentos,
+                          Emprestimo **emprestimos, int countEmprestimos,
+                          Financiamento **financiamentos, int countFinanciamentos);
+
+
+// Fecha o arquivo do extrato
 void finalizarExtrato(FILE *file);
-void gerarExtratoBancario(Cliente *cliente, Transferencia *transfers, int nTransfers, Investimento **investimentos, int nInvestimentos, Emprestimo **emprestimos, int nEmprestimos, Financiamento **financiamentos, int nFinanciamentos);
 
 #endif // EXTRATO_H

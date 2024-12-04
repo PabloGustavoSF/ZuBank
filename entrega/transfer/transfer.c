@@ -135,11 +135,11 @@ void menuTransferencia(Transferencia **vetorTransf, Cliente *cliente, int max_tr
                     printf("Quanto deseja transferir? R$");
                     scanf("%f", &valor);
                     getchar(); // Limpa o buffer do scanf
-                    if (valor > cliente->saldo_inicial)
+                    if (valor > cliente->saldo_final)
                     {
-                        printf("Saldo insuficiente! Saldo disponível: R$%.2f\n", cliente->saldo_inicial);
+                        printf("Saldo insuficiente! Saldo disponível: R$%.2f\n", cliente->saldo_final);
                     }
-                } while (valor > cliente->saldo_inicial);
+                } while (valor > cliente->saldo_final);
 
                 printf("Qual o nome do beneficiário? ");
                 fgets(remetente, sizeof(remetente), stdin);

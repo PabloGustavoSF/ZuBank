@@ -11,8 +11,8 @@
 #include "extrato/extrato.h"
 
 #define nTRANSFER 5
-#define nINVEST 10  // Número máximo de investimentos
-#define nEMPREST 5  // Número máximo de empréstimos
+#define nINVEST 10       // Número máximo de investimentos
+#define nEMPREST 5       // Número máximo de empréstimos
 #define nFINANCIAMENTO 5 // Número máximo de financiamentos
 
 int main(int argc, char const *argv[])
@@ -27,12 +27,12 @@ int main(int argc, char const *argv[])
     criarConta(&user);
     Cliente *novoCliente = criarCliente(user.nome, user.conta_id, user.saldo_Inicial);
 
-    // Alocação e inicialização para transferências
-    Transferencia *transfers = (Transferencia *)calloc(nTRANSFER, sizeof(Transferencia));  
+    // Alocação de vetor de ponteiros para Transferencia
+    Transferencia **transfers = (Transferencia **)calloc(nTRANSFER, sizeof(Transferencia *));
     if (transfers == NULL)
     {
         printf("Erro ao alocar memória para transferências.\n");
-        return 1;  // Saída do programa em caso de falha na alocação
+        return 1;
     }
 
     // Alocação e inicialização para investimentos
@@ -40,21 +40,21 @@ int main(int argc, char const *argv[])
     if (investimentos == NULL)
     {
         printf("Erro ao alocar memória para investimentos.\n");
-        free(transfers);  // Liberar memória de transfers antes de sair
+        free(transfers); // Liberar memória de transfers antes de sair
         return 1;
     }
-    int countInvestimentos = 0;  // Contador de investimentos criados
+    int countInvestimentos = 0; // Contador de investimentos criados
 
     // Alocação e inicialização para empréstimos
     Emprestimo **emprestimos = (Emprestimo **)calloc(nEMPREST, sizeof(Emprestimo *));
     if (emprestimos == NULL)
     {
         printf("Erro ao alocar memória para empréstimos.\n");
-        free(transfers);  // Liberar memória de transfers antes de sair
-        free(investimentos);  // Liberar memória de investimentos antes de sair
+        free(transfers);     // Liberar memória de transfers antes de sair
+        free(investimentos); // Liberar memória de investimentos antes de sair
         return 1;
     }
-    int countEmprestimos = 0;  // Contador de empréstimos criados
+    int countEmprestimos = 0; // Contador de empréstimos criados
 
     // Alocação e inicialização para financiamentos
     Financiamento **financiamentos = (Financiamento **)calloc(nFINANCIAMENTO, sizeof(Financiamento *));
@@ -88,7 +88,7 @@ int main(int argc, char const *argv[])
         switch (servico)
         {
         case 1:
-            menuTransferencia(&transfers, novoCliente, nTRANSFER);
+            menuTransferencia(transfers, novoCliente, nTRANSFER);
             break;
         case 2:
             menuInvestimento(investimentos, &countInvestimentos, nINVEST, &novoCliente->saldo_final);

@@ -1,88 +1,109 @@
 #include "extrato.h"
+#include <stdio.h>
+#include <stdlib.h>
 
+// Função para criar o arquivo do extrato com informações básicas do cliente
 void criarExtrato(FILE **file, Cliente *cliente) {
-    *file = fopen("EXTRATO BANCÁRIO.txt", "w");
+    *file = fopen("extrato.txt", "w");
     if (*file == NULL) {
-        printf("ERRO AO ABRIR O ARQUIVO DO EXTRATO BANCÁRIO!\n");
+        printf("ERRO AO ABRIR O ARQUIVO DE EXTRATO!\n");
         return;
     }
 
-    fprintf(*file, "EXTRATO BANCÁRIO - BANCO ZUBANK\n\n");
+    fprintf(*file, "==================== EXTRATO BANCÁRIO ====================\n");
     fprintf(*file, "Nome do Cliente: %s\n", cliente->nome);
-    fprintf(*file, "Número da Conta: %d\n\n", cliente->conta);
+    fprintf(*file, "Número da Conta: %d\n", cliente->conta);
+    fprintf(*file, "Saldo Inicial: R$%.2f\n", cliente->saldo_inicial);
 }
 
-void lerRelatorioEntrada(FILE *file, Extrato *extrato, Transferencia *transfers, int nTransfers, Investimento **investimentos, int nInvestimentos, Emprestimo **emprestimos, int nEmprestimos) {
-    fprintf(file, "===== RELATÓRIO DE ENTRADA =====\n");
-    fprintf(file, "Saldo Inicial: R$%.2f\n", extrato->saldo_inicial);
-
-    float totalTransferencias = 0.0;
-    for (int i = 0; i < nTransfers; i++) {
-        totalTransferencias += transfers[i].valor_transferencia;
+// Função para gerar o extrato completo com todas as informações
+void gerarExtratoBancario(Cliente *cliente, Transferencia **transfers, int nTransfers,
+                          Investimento **investimentos, int countInvestimentos,
+                          Emprestimo **emprestimos, int countEmprestimos,
+                          Financiamento **financiamentos, int countFinanciamentos) {
+    FILE *file = fopen("extrato.txt", "w");
+    if (file == NULL) {
+        printf("ERRO AO ABRIR O ARQUIVO DE EXTRATO!\n");
+        return;
     }
-    extrato->transferencias = totalTransferencias;
-    fprintf(file, "Transferências Recebidas: R$%.2f\n", totalTransferencias);
 
-    float totalRendimentos = 0.0;
-    for (int i = 0; i < nInvestimentos; i++) {
-        totalRendimentos += investimentos[i]->rendimento_liquido;
+    // Informações do cliente
+    fprintf(file, "==================== EXTRATO BANCÁRIO ====================\n");
+    fprintf(file, "Nome do Cliente: %s\n", cliente->nome);
+    fprintf(file, "Número da Conta: %d\n", cliente->conta);
+    fprintf(file, "Saldo Inicial: R$%.2f\n", cliente->saldo_inicial);
+    fprintf(file, "Saldo Final: R$%.2f\n\n", cliente->saldo_final);
+
+    // Transferências realizadas
+    fprintf(file, "==================== TRANSFERÊNCIAS ====================\n");
+    if (nTransfers > 0 && transfers != NULL) {
+        for (int i = 0; i < nTransfers; i++) {
+            if (transfers[i] != NULL && transfers[i]->valor_transferencia > 0) {
+                fprintf(file, "Beneficiário: %s | Conta: %d | Valor: R$%.2f\n",
+                        transfers[i]->beneficiario, transfers[i]->conta_trans, transfers[i]->valor_transferencia);
+            }
+        }
+    } else {
+        fprintf(file, "Nenhuma transferência registrada.\n");
     }
-    extrato->rendimento_liquido = totalRendimentos;
-    fprintf(file, "Rendimento Líquido do CDB: R$%.2f\n", totalRendimentos);
 
-    float totalEmprestimos = 0.0;
-    for (int i = 0; i < nEmprestimos; i++) {
-        totalEmprestimos += emprestimos[i]->valor_emprestimo;
+    // Investimentos
+    fprintf(file, "\n==================== INVESTIMENTOS ====================\n");
+    if (countInvestimentos > 0 && investimentos != NULL) {
+        for (int i = 0; i < countInvestimentos; i++) {
+            fprintf(file, "Valor Investido: R$%.2f | Meses: %d | Rendimento Líquido: R$%.2f\n",
+                    investimentos[i]->investimento,
+                    investimentos[i]->meses_investidos,
+                    investimentos[i]->rendimento_liquido);
+        }
+    } else {
+        fprintf(file, "Nenhum investimento registrado.\n");
     }
-    extrato->emprestimo = totalEmprestimos;
-    fprintf(file, "Empréstimo Recebido: R$%.2f\n\n", totalEmprestimos);
-}
 
-void lerRelatorioSaida(FILE *file, Extrato *extrato, Transferencia *transfers, int nTransfers, Emprestimo **emprestimos, int nEmprestimos, Financiamento **financiamentos, int nFinanciamentos) {
-    fprintf(file, "===== RELATÓRIO DE SAÍDA =====\n");
-
-    float totalTransferencias = 0.0;
-    for (int i = 0; i < nTransfers; i++) {
-        totalTransferencias += transfers[i].valor_transferencia;
+    // Empréstimos
+    fprintf(file, "\n==================== EMPRÉSTIMOS ====================\n");
+    if (countEmprestimos > 0 && emprestimos != NULL) {
+        for (int i = 0; i < countEmprestimos; i++) {
+            fprintf(file, "ID: %d | Valor: R$%.2f | Parcelas: R$%.2f | Juros Totais: R$%.2f\n",
+                    emprestimos[i]->id,
+                    emprestimos[i]->valor_emprestimo,
+                    emprestimos[i]->valor_parcela,
+                    emprestimos[i]->juros_totais);
+        }
+    } else {
+        fprintf(file, "Nenhum empréstimo registrado.\n");
     }
-    fprintf(file, "Transferências Realizadas: R$%.2f\n", totalTransferencias);
 
-    float totalParcelasEmprestimo = 0.0;
-    for (int i = 0; i < nEmprestimos; i++) {
-        totalParcelasEmprestimo += emprestimos[i]->valor_parcela;
+    // Financiamentos
+    fprintf(file, "\n==================== FINANCIAMENTOS ====================\n");
+    if (countFinanciamentos > 0 && financiamentos != NULL) {
+        for (int i = 0; i < countFinanciamentos; i++) {
+            fprintf(file, "ID: %d | Valor Financiado: R$%.2f | Parcelas: R$%.2f | Amortização: R$%.2f | Juros Totais: R$%.2f\n",
+                    financiamentos[i]->id,
+                    financiamentos[i]->valor_financiado,
+                    financiamentos[i]->valor_parcela,
+                    financiamentos[i]->amortizacao,
+                    financiamentos[i]->juros_totais);
+        }
+    } else {
+        fprintf(file, "Nenhum financiamento registrado.\n");
     }
-    extrato->parcelas_emprestimo = totalParcelasEmprestimo;
-    fprintf(file, "Parcelas do Empréstimo (Total): R$%.2f\n", totalParcelasEmprestimo);
 
-    float totalParcelasFinanciamento = 0.0;
-    for (int i = 0; i < nFinanciamentos; i++) {
-        totalParcelasFinanciamento += financiamentos[i]->valor_parcela;
-    }
-    extrato->parcelas_financiamento = totalParcelasFinanciamento;
-    fprintf(file, "Parcelas do Financiamento (Total): R$%.2f\n", totalParcelasFinanciamento);
-}
-
-void calcularESalvarSaldoFinal(FILE *file, Extrato *extrato) {
-    extrato->saldo_final = extrato->saldo_inicial + extrato->rendimento_liquido + extrato->emprestimo
-                          - (extrato->transferencias + extrato->parcelas_emprestimo + extrato->parcelas_financiamento);
-    fprintf(file, "\nSaldo Final: R$%.2f\n", extrato->saldo_final);
-}
-
-void finalizarExtrato(FILE *file) {
+    // Finalização
+    fprintf(file, "\n==================== FINAL DO EXTRATO ====================\n");
+    fprintf(file, "Obrigado por utilizar o Banco Zubank!\n");
     fclose(file);
-    printf("EXTRATO BANCÁRIO GERADO COM SUCESSO!\n");
+
+    printf("Extrato bancário gerado com sucesso!\n");
 }
 
-void gerarExtratoBancario(Cliente *cliente, Transferencia *transfers, int nTransfers, Investimento **investimentos, int nInvestimentos, Emprestimo **emprestimos, int nEmprestimos, Financiamento **financiamentos, int nFinanciamentos) {
-    FILE *file;
-    Extrato extrato = {0};
-    extrato.saldo_inicial = cliente->saldo_inicial;
 
-    criarExtrato(&file, cliente);
+// Função para fechar o arquivo do extrato
+void finalizarExtrato(FILE *file) {
     if (file != NULL) {
-        lerRelatorioEntrada(file, &extrato, transfers, nTransfers, investimentos, nInvestimentos, emprestimos, nEmprestimos);
-        lerRelatorioSaida(file, &extrato, transfers, nTransfers, emprestimos, nEmprestimos, financiamentos, nFinanciamentos);
-        calcularESalvarSaldoFinal(file, &extrato);
-        finalizarExtrato(file);
+        fclose(file);
+        printf("Extrato bancário fechado com sucesso.\n");
+    } else {
+        printf("ERRO: Nenhum arquivo para fechar.\n");
     }
 }

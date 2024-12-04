@@ -1,0 +1,20 @@
+==================== EXTRATO BANCÁRIO ====================
+Nome do Cliente: Adiel
+
+Número da Conta: 1
+Saldo Inicial: R$1000.00
+Saldo Final: R$2000.00
+
+==================== TRANSFERÊNCIAS ====================
+
+==================== INVESTIMENTOS ====================
+Valor Investido: R$3000.00 | Meses: 48 | Rendimento Líquido: R$4472.64
+
+==================== EMPRÉSTIMOS ====================
+ID: 1 | Valor: R$10000.00 | Parcelas: R$1082.05 | Juros Totais: R$820.45
+
+==================== FINANCIAMENTOS ====================
+ID: 1 | Valor Financiado: R$50000.00 | Parcelas: R$951.81 | Amortização: R$694.44 | Juros Totais: R$18530.06
+
+==================== FINAL DO EXTRATO ====================
+Obrigado por utilizar o Banco Zubank!
