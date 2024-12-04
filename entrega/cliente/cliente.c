@@ -4,7 +4,7 @@ Cliente* criarCliente(const char* nome, int conta, float saldo_inicial) {
     // Alocar memória para o cliente
     Cliente* cliente = (Cliente*)malloc(sizeof(Cliente));
     if (cliente == NULL) {
-        printf("Erro ao alocar memória para o cliente.\n");
+        printf("Erro ao alocar memoria para o cliente.\n");
         return NULL;
     }
 

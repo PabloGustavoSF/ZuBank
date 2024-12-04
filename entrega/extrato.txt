@@ -3,18 +3,20 @@ Nome do Cliente: Adiel
 
 Número da Conta: 1
 Saldo Inicial: R$1000.00
-Saldo Final: R$2000.00
+Saldo Final: R$10000.00
 
 ==================== TRANSFERÊNCIAS ====================
+Beneficiário: DAVI | Conta: 2 | Valor: R$2000.00
+Beneficiário: Hideo | Conta: 3 | Valor: R$3000.00
 
 ==================== INVESTIMENTOS ====================
-Valor Investido: R$3000.00 | Meses: 48 | Rendimento Líquido: R$4472.64
+Valor Investido: R$4000.00 | Meses: 36 | Rendimento Líquido: R$5385.83
 
 ==================== EMPRÉSTIMOS ====================
-ID: 1 | Valor: R$10000.00 | Parcelas: R$1082.05 | Juros Totais: R$820.45
+ID: 1 | Valor: R$20000.00 | Parcelas: R$1829.03 | Juros Totais: R$1948.41
 
 ==================== FINANCIAMENTOS ====================
-ID: 1 | Valor Financiado: R$50000.00 | Parcelas: R$951.81 | Amortização: R$694.44 | Juros Totais: R$18530.06
+ID: 1 | Valor Financiado: R$50000.00 | Parcelas: R$1087.22 | Amortização: R$833.33 | Juros Totais: R$15233.26
 
 ==================== FINAL DO EXTRATO ====================
 Obrigado por utilizar o Banco Zubank!

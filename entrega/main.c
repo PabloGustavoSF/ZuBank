@@ -31,64 +31,64 @@ int main(int argc, char const *argv[])
     Transferencia **transfers = (Transferencia **)calloc(nTRANSFER, sizeof(Transferencia *));
     if (transfers == NULL)
     {
-        printf("Erro ao alocar memória para transferências.\n");
+        printf("Erro ao alocar memoria para transferencias.\n");
         return 1;
     }
+    int countTransferencias = 0; // Contador de transferências criadas
 
     // Alocação e inicialização para investimentos
     Investimento **investimentos = (Investimento **)calloc(nINVEST, sizeof(Investimento *));
     if (investimentos == NULL)
     {
-        printf("Erro ao alocar memória para investimentos.\n");
-        free(transfers); // Liberar memória de transfers antes de sair
+        printf("Erro ao alocar memoria para investimentos.\n");
+        free(transfers);
         return 1;
     }
-    int countInvestimentos = 0; // Contador de investimentos criados
+    int countInvestimentos = 0;
 
     // Alocação e inicialização para empréstimos
     Emprestimo **emprestimos = (Emprestimo **)calloc(nEMPREST, sizeof(Emprestimo *));
     if (emprestimos == NULL)
     {
-        printf("Erro ao alocar memória para empréstimos.\n");
-        free(transfers);     // Liberar memória de transfers antes de sair
-        free(investimentos); // Liberar memória de investimentos antes de sair
+        printf("Erro ao alocar memoria para emprestimos.\n");
+        free(transfers);
+        free(investimentos);
         return 1;
     }
-    int countEmprestimos = 0; // Contador de empréstimos criados
+    int countEmprestimos = 0;
 
     // Alocação e inicialização para financiamentos
     Financiamento **financiamentos = (Financiamento **)calloc(nFINANCIAMENTO, sizeof(Financiamento *));
     if (financiamentos == NULL)
     {
-        printf("Erro ao alocar memória para financiamentos.\n");
+        printf("Erro ao alocar memoria para financiamentos.\n");
         free(transfers);
         free(investimentos);
         free(emprestimos);
         return 1;
     }
-    int countFinanciamentos = 0; // Contador de financiamentos criados
+    int countFinanciamentos = 0;
 
     printf("Nome: %s\n", user.nome);
     printf("ID da Conta: %d\n", user.conta_id);
     printf("Saldo Inicial: %.2f\n", user.saldo_Inicial);
 
-    printf("Qual o número do serviço que deseja utilizar?\n");
+    printf("Qual o serviço que deseja utilizar?\n");
 
     do
     {
-        printf("\n1 - Realizar transferência");
+        printf("\n1 - Realizar transferencia");
         printf("\n2 - Gerenciar investimentos");
-        printf("\n3 - Realizar empréstimo");
+        printf("\n3 - Realizar emprestimo");
         printf("\n4 - Realizar financiamento");
         printf("\n5 - Extrato");
-        printf("\n6 - Fechar conta\n");
         printf("Escolha: ");
         scanf("%d", &servico);
 
         switch (servico)
         {
         case 1:
-            menuTransferencia(transfers, novoCliente, nTRANSFER);
+            menuTransferencia(transfers, novoCliente, nTRANSFER, &countTransferencias);
             break;
         case 2:
             menuInvestimento(investimentos, &countInvestimentos, nINVEST, &novoCliente->saldo_final);
@@ -100,17 +100,14 @@ int main(int argc, char const *argv[])
             menuFinanciamento(financiamentos, &countFinanciamentos, nFINANCIAMENTO);
             break;
         case 5:
-            gerarExtratoBancario(novoCliente, transfers, nTRANSFER, investimentos, countInvestimentos, emprestimos, countEmprestimos, financiamentos, countFinanciamentos);
-            break;
-        case 6:
-            printf("Fechando conta...\n");
+            gerarExtratoBancario(novoCliente, transfers, countTransferencias, investimentos, countInvestimentos, emprestimos, countEmprestimos, financiamentos, countFinanciamentos);
             break;
         default:
-            printf("Opção inválida! Tente novamente.\n");
+            printf("Opção invalida! Tente novamente.\n");
             break;
         }
 
-        if (servico != 6)
+        if (servico != 5)
         {
             do
             {
@@ -125,10 +122,22 @@ int main(int argc, char const *argv[])
     } while (continua == 1);
 
     // Liberar memória alocada
+    for (int i = 0; i < countTransferencias; i++)
+        free(transfers[i]);
     free(transfers);
+
+    for (int i = 0; i < countInvestimentos; i++)
+        free(investimentos[i]);
     free(investimentos);
+
+    for (int i = 0; i < countEmprestimos; i++)
+        free(emprestimos[i]);
     free(emprestimos);
+
+    for (int i = 0; i < countFinanciamentos; i++)
+        free(financiamentos[i]);
     free(financiamentos);
+
     free(novoCliente);
 
     return 0;

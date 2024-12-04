@@ -34,11 +34,11 @@ void gerarExtratoBancario(Cliente *cliente, Transferencia **transfers, int nTran
     fprintf(file, "Saldo Inicial: R$%.2f\n", cliente->saldo_inicial);
     fprintf(file, "Saldo Final: R$%.2f\n\n", cliente->saldo_final);
 
-    // Transferências realizadas
+    // Transferências
     fprintf(file, "==================== TRANSFERÊNCIAS ====================\n");
     if (nTransfers > 0 && transfers != NULL) {
         for (int i = 0; i < nTransfers; i++) {
-            if (transfers[i] != NULL && transfers[i]->valor_transferencia > 0) {
+            if (transfers[i] != NULL) {
                 fprintf(file, "Beneficiário: %s | Conta: %d | Valor: R$%.2f\n",
                         transfers[i]->beneficiario, transfers[i]->conta_trans, transfers[i]->valor_transferencia);
             }

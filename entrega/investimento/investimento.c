@@ -6,7 +6,7 @@ Investimento *criarInvestimento(float investimento_valor, int meses_investidos)
     Investimento *investimento = (Investimento *)malloc(sizeof(Investimento));
     if (investimento == NULL)
     {
-        printf("Erro ao alocar memória para o investimento.\n");
+        printf("Erro ao alocar memoria para o investimento.\n");
         return NULL;
     }
 
@@ -41,9 +41,9 @@ void exibirInvestimento(const Investimento *investimento)
     printf("\n--- Detalhes do Investimento ---\n");
     printf("Valor investido: R$%.2f\n", investimento->investimento);
     printf("Meses corridos: %d\n", investimento->meses_investidos);
-    printf("Alíquota do IR: %.2f%%\n", investimento->ir * 100);
+    printf("Aliquota do IR: %.2f%%\n", investimento->ir * 100);
     printf("Rendimento bruto: R$%.2f\n", investimento->rendimento_bruto);
-    printf("Rendimento líquido: R$%.2f\n", investimento->rendimento_liquido);
+    printf("Rendimento liquido: R$%.2f\n", investimento->rendimento_liquido);
 }
 
 // Função para salvar os investimentos no arquivo
@@ -92,7 +92,7 @@ void carregarInvestimentos(Investimento **vetorInvestimentos, int *count, int ma
         Investimento *investimento = (Investimento *)malloc(sizeof(Investimento));
         if (investimento == NULL)
         {
-            printf("Erro ao alocar memória para o investimento.\n");
+            printf("Erro ao alocar memoria para o investimento.\n");
             break;
         }
 
@@ -122,7 +122,7 @@ void deletarInvestimento(Investimento **vetorInvestimentos, int id, int *count)
 {
     if (id < 0 || id >= *count || vetorInvestimentos[id] == NULL)
     {
-        printf("Investimento inválido.\n");
+        printf("Investimento invalido.\n");
         return;
     }
 
@@ -137,7 +137,7 @@ void deletarInvestimento(Investimento **vetorInvestimentos, int id, int *count)
     vetorInvestimentos[*count - 1] = NULL;
     (*count)--;
 
-    printf("Investimento excluído com sucesso.\n");
+    printf("Investimento excluido com sucesso.\n");
 }
 
 // Menu de gerenciamento de investimentos
@@ -150,6 +150,7 @@ void menuInvestimento(Investimento **vetorInvestimentos, int *count, int max_inv
 
     do
     {
+        printf("| Seu saldo e ( R$%.2f )\n", *saldo_final);
         printf("\n| MENU Investimento |\n");
         printf("| 1 | Criar Investimento\n");
         printf("| 2 | Exibir Investimentos\n");
@@ -168,7 +169,7 @@ void menuInvestimento(Investimento **vetorInvestimentos, int *count, int max_inv
 
                 if (valor > *saldo_final)
                 {
-                    printf("Saldo insuficiente! Seu saldo atual é R$%.2f.\n", *saldo_final);
+                    printf("Saldo insuficiente! Seu saldo atual e R$%.2f.\n", *saldo_final);
                 }
                 else
                 {
@@ -180,7 +181,7 @@ void menuInvestimento(Investimento **vetorInvestimentos, int *count, int max_inv
                     {
                         (*count)++;
                         *saldo_final -= valor; // Deduz o valor investido do saldo final
-                        printf("Investimento criado com sucesso! Seu novo saldo é R$%.2f.\n", *saldo_final);
+                        printf("Investimento criado com sucesso! Seu novo saldo e R$%.2f.\n", *saldo_final);
                     }
                 }
             }
@@ -212,11 +213,11 @@ void menuInvestimento(Investimento **vetorInvestimentos, int *count, int max_inv
             {
                 *saldo_final += vetorInvestimentos[id - 1]->investimento; // Reembolsa o valor investido
                 deletarInvestimento(vetorInvestimentos, id - 1, count);
-                printf("Investimento deletado com sucesso! Seu novo saldo é R$%.2f.\n", *saldo_final);
+                printf("Investimento deletado com sucesso! Seu novo saldo e R$%.2f.\n", *saldo_final);
             }
             else
             {
-                printf("ID inválido.\n");
+                printf("ID invalido.\n");
             }
             break;
 
@@ -226,7 +227,7 @@ void menuInvestimento(Investimento **vetorInvestimentos, int *count, int max_inv
             break;
 
         default:
-            printf("Opção inválida, tente novamente.\n");
+            printf("Opção invalida, tente novamente.\n");
             break;
         }
     } while (op != 4);

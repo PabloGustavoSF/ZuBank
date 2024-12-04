@@ -9,7 +9,7 @@ void criarFinanciamento(Financiamento **vetorFinanciamentos, int *count, int max
 
     Financiamento *novo = (Financiamento *)malloc(sizeof(Financiamento));
     if (novo == NULL) {
-        printf("Erro ao alocar memória para o financiamento.\n");
+        printf("Erro ao alocar memoria para o financiamento.\n");
         return;
     }
 
@@ -20,10 +20,10 @@ void criarFinanciamento(Financiamento **vetorFinanciamentos, int *count, int max
     printf("Informe o valor do financiamento: R$");
     scanf("%f", &novo->valor_financiado);
 
-    printf("Informe o número de parcelas (meses): ");
+    printf("Informe o numero de parcelas (meses): ");
     scanf("%d", &novo->tempo_financiamento);
 
-    printf("Deseja usar a taxa de juros padrão (%.4f)? [1-Sim / 2-Não]: ", Jm);
+    printf("Deseja usar a taxa de juros padrao (%.4f)? [1-Sim / 2-Não]: ", Jm);
     int usarPadrao;
     scanf("%d", &usarPadrao);
 
@@ -80,7 +80,7 @@ void atualizarFinanciamento(Financiamento **vetorFinanciamentos, int count) {
             printf("Novo valor do financiamento (atual: R$%.2f):\n", vetorFinanciamentos[i]->valor_financiado);
             scanf("%f", &vetorFinanciamentos[i]->valor_financiado);
 
-            printf("Novo número de parcelas (atual: %d meses):\n", vetorFinanciamentos[i]->tempo_financiamento);
+            printf("Novo numero de parcelas (atual: %d meses):\n", vetorFinanciamentos[i]->tempo_financiamento);
             scanf("%d", &vetorFinanciamentos[i]->tempo_financiamento);
 
             printf("Nova taxa de juros mensal (atual: %.4f):\n", vetorFinanciamentos[i]->taxa_juros);
@@ -117,13 +117,13 @@ void excluirFinanciamento(Financiamento **vetorFinanciamentos, int *count) {
             }
 
             (*count)--;
-            printf("Financiamento excluído com sucesso!\n");
+            printf("Financiamento excluido com sucesso!\n");
             break;
         }
     }
 
     if (!encontrado) {
-        printf("Financiamento não encontrado!\n");
+        printf("Financiamento nao encontrado!\n");
     }
 }
 
@@ -167,7 +167,7 @@ void carregarFinanciamentos(Financiamento **vetorFinanciamentos, int *count, int
         if (sscanf(linha, "ID: %d", &id) == 1) {
             financiamento = (Financiamento *)malloc(sizeof(Financiamento));
             if (financiamento == NULL) {
-                printf("Erro ao alocar memória para o financiamento.\n");
+                printf("Erro ao alocar memoria para o financiamento.\n");
                 break;
             }
 
@@ -329,7 +329,7 @@ void menuFinanciamento(Financiamento **vetorFinanciamentos, int *count, int max_
                 printf("Saindo do menu de financiamentos.\n");
                 break;
             default:
-                printf("Opção inválida.\n");
+                printf("Opção invalida.\n");
         }
     } while (opcao != 7);
 }

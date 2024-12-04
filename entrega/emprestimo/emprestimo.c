@@ -2,31 +2,31 @@
 
 void criarEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_emprestimos, float *saldo_disponivel) {
     if (*count >= max_emprestimos) {
-        printf("Limite de empréstimos atingido!\n");
+        printf("Limite de emprestimos atingido!\n");
         return;
     }
 
     Emprestimo *novo = (Emprestimo *)malloc(sizeof(Emprestimo));
     if (novo == NULL) {
-        printf("Erro ao alocar memória para o empréstimo.\n");
+        printf("Erro ao alocar memoria para o emprestimo.\n");
         return;
     }
 
     // Gera um novo ID
     novo->id = (*count == 0) ? 1 : vetorEmprestimos[*count - 1]->id + 1;
 
-    // Solicita informações do usuário
-    printf("Quanto deseja receber de empréstimo? (Saldo disponível: R$%.2f)\nR$", *saldo_disponivel);
+    // Solicita informações do usuario
+    printf("Quanto deseja receber de emprestimo? (Saldo disponivel: R$%.2f)\nR$", *saldo_disponivel);
     scanf("%f", &novo->valor_emprestimo);
 
-    // Verifica se o valor solicitado excede o saldo disponível
+    // Verifica se o valor solicitado excede o saldo disponivel
     if (novo->valor_emprestimo <= 0) {
-        printf("Valor inválido! Empréstimo deve ser maior que zero.\n");
+        printf("Valor invalido! Emprestimo deve ser maior que zero.\n");
         free(novo);
         return;
     }
 
-    printf("Em quantos meses deseja pagar o empréstimo?\n");
+    printf("Em quantos meses deseja pagar o emprestimo?\n");
     scanf("%d", &novo->tempo_emprestimo);
 
     // Calcula parcelas e juros
@@ -34,20 +34,20 @@ void criarEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_empresti
     novo->valor_parcela = (novo->valor_emprestimo * taxa_juros) / (1 - pow(1 + taxa_juros, -novo->tempo_emprestimo));
     novo->juros_totais = (novo->valor_parcela * novo->tempo_emprestimo) - novo->valor_emprestimo;
 
-    // Adiciona o empréstimo ao vetor
+    // Adiciona o emprestimo ao vetor
     vetorEmprestimos[*count] = novo;
     (*count)++;
 
-    // Atualiza o saldo disponível
+    // Atualiza o saldo disponivel
     *saldo_disponivel += novo->valor_emprestimo;
 
-    printf("Empréstimo criado com sucesso! ID: %d\n", novo->id);
-    printf("Novo saldo disponível: R$%.2f\n", *saldo_disponivel);
+    printf("Emprestimo criado com sucesso! ID: %d\n", novo->id);
+    printf("Novo saldo disponivel: R$%.2f\n", *saldo_disponivel);
 }
 
 void exibirEmprestimos(Emprestimo **vetorEmprestimos, int count) {
     if (count == 0) {
-        printf("Nenhum empréstimo registrado.\n");
+        printf("Nenhum emprestimo registrado.\n");
         return;
     }
 
@@ -66,12 +66,12 @@ void exibirEmprestimos(Emprestimo **vetorEmprestimos, int count) {
 
 void atualizarEmprestimo(Emprestimo **vetorEmprestimos, int count) {
     int id;
-    printf("Digite o ID do empréstimo que deseja atualizar:\n");
+    printf("Digite o ID do emprestimo que deseja atualizar:\n");
     scanf("%d", &id);
 
     for (int i = 0; i < count; i++) {
         if (vetorEmprestimos[i]->id == id) {
-            printf("Novo valor do empréstimo (atual: R$%.2f):\n", vetorEmprestimos[i]->valor_emprestimo);
+            printf("Novo valor do emprestimo (atual: R$%.2f):\n", vetorEmprestimos[i]->valor_emprestimo);
             scanf("%f", &vetorEmprestimos[i]->valor_emprestimo);
 
             printf("Novo tempo para pagamento (atual: %d meses):\n", vetorEmprestimos[i]->tempo_emprestimo);
@@ -84,16 +84,16 @@ void atualizarEmprestimo(Emprestimo **vetorEmprestimos, int count) {
             vetorEmprestimos[i]->juros_totais = (vetorEmprestimos[i]->valor_parcela * vetorEmprestimos[i]->tempo_emprestimo) - 
                                                 vetorEmprestimos[i]->valor_emprestimo;
 
-            printf("Empréstimo atualizado com sucesso!\n");
+            printf("Emprestimo atualizado com sucesso!\n");
             return;
         }
     }
-    printf("Empréstimo com ID %d não encontrado.\n", id);
+    printf("Emprestimo com ID %d nao encontrado.\n", id);
 }
 
 void excluirEmprestimo(Emprestimo **vetorEmprestimos, int *count) {
     int id;
-    printf("Digite o ID do empréstimo que deseja excluir:\n");
+    printf("Digite o ID do emprestimo que deseja excluir:\n");
     scanf("%d", &id);
 
     int encontrado = 0;
@@ -101,22 +101,22 @@ void excluirEmprestimo(Emprestimo **vetorEmprestimos, int *count) {
         if (vetorEmprestimos[i]->id == id) {
             encontrado = 1;
 
-            // Libera a memória alocada para o empréstimo
+            // Libera a memoria alocada para o emprestimo
             free(vetorEmprestimos[i]);
 
-            // Move os elementos restantes uma posição à esquerda no vetor
+            // Move os elementos restantes uma posiçao à esquerda no vetor
             for (int j = i; j < *count - 1; j++) {
                 vetorEmprestimos[j] = vetorEmprestimos[j + 1];
             }
 
-            (*count)--;  // Reduz o número de empréstimos
-            printf("Empréstimo excluído com sucesso!\n");
+            (*count)--;  // Reduz o número de emprestimos
+            printf("Emprestimo excluido com sucesso!\n");
             break;
         }
     }
 
     if (!encontrado) {
-        printf("Empréstimo não encontrado!\n");
+        printf("Emprestimo nao encontrado!\n");
     }
 }
 
@@ -125,7 +125,7 @@ void salvarEmprestimos(Emprestimo **vetorEmprestimos, int count) {
     FILE *file = fopen("emprestimos.txt", "w");
 
     if (file == NULL) {
-        printf("Erro ao abrir o arquivo para salvar os empréstimos.\n");
+        printf("Erro ao abrir o arquivo para salvar os emprestimos.\n");
         return;
     }
 
@@ -139,13 +139,13 @@ void salvarEmprestimos(Emprestimo **vetorEmprestimos, int count) {
     }
 
     fclose(file);
-    printf("Empréstimos salvos com sucesso!\n");
+    printf("Emprestimos salvos com sucesso!\n");
 }
 
 void carregarEmprestimos(Emprestimo **vetorEmprestimos, int *count, int max_emprestimos) {
     FILE *file = fopen("emprestimos.txt", "w");
     if (file == NULL) {
-        printf("Nenhum arquivo de empréstimos encontrado.\n");
+        printf("Nenhum arquivo de emprestimos encontrado.\n");
         return;
     }
 
@@ -159,7 +159,7 @@ void carregarEmprestimos(Emprestimo **vetorEmprestimos, int *count, int max_empr
         if (sscanf(linha, "ID: %d", &id) == 1) {
             emprestimo = (Emprestimo *)malloc(sizeof(Emprestimo));
             if (emprestimo == NULL) {
-                printf("Erro ao alocar memória para o empréstimo.\n");
+                printf("Erro ao alocar memoria para o emprestimo.\n");
                 break;
             }
 
@@ -181,7 +181,7 @@ void carregarEmprestimos(Emprestimo **vetorEmprestimos, int *count, int max_empr
             sscanf(linha, "JUROS TOTAIS DO EMPRESTIMO: R$%f", &jurosTotais);
             emprestimo->juros_totais = jurosTotais;
 
-            fgets(linha, sizeof(linha), file);  // Pular a linha de separação
+            fgets(linha, sizeof(linha), file);  // Pular a linha de separaçao
 
             vetorEmprestimos[*count] = emprestimo;
             (*count)++;
@@ -191,7 +191,7 @@ void carregarEmprestimos(Emprestimo **vetorEmprestimos, int *count, int max_empr
     fclose(file);
 
     if (*count > 0) {
-        printf("Empréstimos carregados com sucesso!\n");
+        printf("Emprestimos carregados com sucesso!\n");
     }
 }
 
@@ -200,13 +200,13 @@ void menuEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_emprestim
     int opcao;
 
     do {
-        printf("\n--- Menu Empréstimos ---\n");
-        printf("1 - Criar Empréstimo\n");
-        printf("2 - Listar Empréstimos\n");
-        printf("3 - Atualizar Empréstimo\n");
-        printf("4 - Excluir Empréstimo\n");
+        printf("\n--- Menu Emprestimos ---\n");
+        printf("1 - Criar Emprestimo\n");
+        printf("2 - Listar Emprestimos\n");
+        printf("3 - Atualizar Emprestimo\n");
+        printf("4 - Excluir Emprestimo\n");
         printf("5 - Sair\n");
-        printf("Escolha uma opção: ");
+        printf("Escolha uma opçao: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -223,11 +223,11 @@ void menuEmprestimo(Emprestimo **vetorEmprestimos, int *count, int max_emprestim
                 excluirEmprestimo(vetorEmprestimos, count);
                 break;
             case 5:
-                salvarEmprestimos(vetorEmprestimos, *count);  // Salva os empréstimos ao sair
-                printf("Saindo do menu de empréstimos.\n");
+                salvarEmprestimos(vetorEmprestimos, *count);  // Salva os emprestimos ao sair
+                printf("Saindo do menu de emprestimos.\n");
                 break;
             default:
-                printf("Opção inválida.\n");
+                printf("Opçao invalida.\n");
         }
     } while (opcao != 5);
 }
